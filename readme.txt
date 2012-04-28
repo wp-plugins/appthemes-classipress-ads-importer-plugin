@@ -22,10 +22,10 @@ If user or ad category doesnt exist it will create it!
 
 How it works?
 
-** In a VERY VERY VERY simple way. Plugin will generate HEADER (first line in your CSV file) based on custom fileds (ad fileds). 
-** You should populate those fileds with appropriate text and that's it! 
-** You will be able to import ads from existing users if you put existing wp "user_email" in that field. In other case, plugin will register new user for you. 
-** Plugin will add new categories if it does not find in existing list.
+* In a VERY VERY VERY simple way. Plugin will generate HEADER (first line in your CSV file) based on custom fileds (ad fileds). 
+* You should populate those fileds with appropriate text and that's it! 
+* You will be able to import ads from existing users if you put existing wp "user_email" in that field. In other case, plugin will register new user for you. 
+* Plugin will add new categories if it does not find in existing list.
 
 == Installation ==
 
