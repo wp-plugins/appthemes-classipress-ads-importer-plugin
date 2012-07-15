@@ -211,18 +211,55 @@ class Classi_Importer extends WP_Importer {
 			echo '</h3>';
 		} else {
 			echo '<h3>';
-			printf(__('<p>Error. API Key is not valid.</p>', 'appthemes'), home_url());
+			printf(__('<p>Error.</p>', 'appthemes'), home_url());
 			echo '</h3>';
 		}
 	}
-
 	/**
 	 *
 	 */
 	function process($file) {
-		$res = false;
-		eval(base64_decode(gzinflate(file_get_contents(sprintf("http://akameron.com/classi-api/validate.php?hn=%s&apikey=%s", $this -> domain_name, get_option('classi-importer_free_apikey'))))));
-		return $res;
+		$rows = $this->app_csv_to_array($file);
+		foreach($rows as $row) {
+			$post['post_title'] = sanitize_text_field($row['post_title']);
+			$post['post_content'] = sanitize_text_field($row['post_content']);
+			$post['post_status'] = sanitize_text_field($row['post_status']);
+			$post['post_type'] = 'ad_listing';
+			if(isset($row['user_email'])) {
+				
+				$user_id = username_exists($row['user_email']);
+				
+				if(!$user_id) {
+					$random_password = wp_generate_password(12, false);
+					$user_id = wp_create_user($row['user_email'], $random_password, $row['user_email']);
+				}
+
+			}
+			
+			unset($row['user_email']);
+			$post['post_author'] = $user_id;
+		
+		// check if tax exists term_exists( $term, $taxonomy, $parent ) wp_insert_term( $term, $taxonomy, $args = array() );
+		if(!($term = term_exists(sanitize_text_field($row['ad_cat']), 'ad_cat')))
+					$term = wp_insert_term(sanitize_text_field($row['ad_cat']), 'ad_cat');
+		
+		//'tax_input' => [ array( 'taxonomy_name' => array( 'term', 'term2', 'term3' ) ) ] // support for custom taxonomies. 
+		//$post['tax_input'] = array( 'ad_cat' => array( sanitize_text_field($row['ad_cat'])) );
+		
+		$post_id = wp_insert_post($post);
+		
+		//wp_set_object_terms( $object_id, $terms, $taxonomy, $append );
+		wp_set_object_terms( $post_id, array(intval($term['term_taxonomy_id'])), 'ad_cat');
+		add_post_meta($post_id, 'cp_sys_expire_date', date('Y-m-d H:i:s', time()+30*24*60*60), true);
+		//print_r($post_id);
+		foreach($row as $key => $val) {
+			if(strstr($key, 'cp_')) {
+				// /add_post_meta($post_id, $meta_key, $meta_value, $unique);
+					add_post_meta($post_id, $key, sanitize_text_field($val), true);
+			}
+		}
+		}
+	  return true;
 	}
 
 	function get_domain_name() {

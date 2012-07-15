@@ -4,7 +4,7 @@
 		Plugin URI: http://appthemesimporter.com/
 		Description: Import Ads+Users from CSV file in ClassiPress Theme
 		Author: @appthemes-importer
-		Version: 1.0.0
+		Version: 2.0.0
 		Author URI: http://appthemesimporter.com/
 		
     Copyright 2012  @appthemes-importer  (email : admin@appthemesimporter.com)
