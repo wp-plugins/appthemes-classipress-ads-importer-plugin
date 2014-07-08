@@ -1,6 +1,6 @@
 === ClassiPress Ads Importer plugin ===
 Contributors: anaisa
-Donate link: http://appthemesimporter.com/
+Donate link: http://appthemesimporter.info/
 Tags: classipress,classipress ads importer,csv importer,users importer,classipress csv importer,ads importer classipress
 Requires at least: 3.0.0
 Tested up to: 3.3.2
@@ -52,7 +52,7 @@ Password is randomly generated and not visible by the Importer Plugin (would be 
 
 == Support ==
 
-Follow up [Ads Importer Support](http://appthemesimporter.com/contact/ "Classi AppTheme Ads Importer") if you encounter any problem during installation or using plugin.
+Follow up [Ads Importer Support](http://appthemesimporter.info/contact/ "Classi AppTheme Ads Importer") if you encounter any problem during installation or using plugin.
 
 == Changelog ==
 
