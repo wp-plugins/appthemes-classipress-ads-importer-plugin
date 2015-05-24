@@ -73,7 +73,7 @@ class Classi_Importer extends WP_Importer {
 	}
 
 	function app_importer_menu() {
-		add_submenu_page('admin-options.php', __('Classi Ads Importer'), __('Classi Ads Importer'), 'manage_options', 'appthemes-classi-importer', array(&$this, 'get_interface'));
+		add_submenu_page('app-dashboard', __('Classi Ads Importer'), __('Classi Ads Importer'), 'manage_options', 'appthemes-classi-importer', array(&$this, 'get_interface'));
 	}
 
 	function get_interface() {
@@ -130,13 +130,14 @@ class Classi_Importer extends WP_Importer {
 		$tmp = $this -> wp_custom_fields;
 		$categories = get_terms('ad_cat', 'orderby=count&hide_empty=0');
 		//var_dump($categories);
+                $tmp1 = array();
 		foreach($categories as $category) {
-			if($category -> name)
+			if(isset($category -> name) && !empty($category -> name))
 				$tmp1[] = $category -> name;
 		}
 		$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 		echo '<div class="narrow" style="width:100%">';
-		echo '<p><h2>' . __('Your CSV file should look like this:', 'appthemes') . '</h2></p>';
+		echo '<p><h2>' . __('Excel generated csv file based on custom fields:', 'appthemes') . '</h2></p>';
 		$csv = '<div><strong style="color:red">post_title,post_content,post_status,user_email,' . implode(',', array_keys($tmp)) . ',ad_cat</strong>';
 		for($i = 0; $i < 10; $i++) {
 			$size = strlen($chars);
@@ -144,14 +145,14 @@ class Classi_Importer extends WP_Importer {
 			for($j = 0; $j < 5; $j++) {
 				$username .= $chars[rand(0, $size - 1)];
 			}
-
-			$csv .= '<div>Add Title,Ad Content,publish,' . $username . '@email.com,' . implode(',', array_values($tmp)) . ',' . $tmp1[$i] . '</div>';
+                        $ad_cat = count($tmp1) && array_key_exists($i, $tmp1)?$tmp1[$i]:"new cat_" . $i;
+			$csv .= '<div>Add Title,Ad Content,publish,' . $username . '@email.com,' . implode(',', array_values($tmp)) . ',' . $ad_cat . '</div>';
 		}
 		$csv .= '</div></h3>';
 		echo $csv;
-		echo '<p style="color:red">' . __('NOTE: If AD_CAT is not found it will create new AD_CAT.', 'appthemes') . '</p>';
-		echo '<p style="color:red">' . __('NOTE: If USER_EMAIL is not found it will create new USER.', 'appthemes') . '</p>';
-		echo '<p><h3>' . __('Choose a CSV file to upload, then click Upload file and import.', 'appthemes') . '</p></h3>';
+		echo '<p style="color:red">' . __('NOTE: It will create new Category if there is no \'ad_cat\' before the import.', 'appthemes') . '</p>';
+		echo '<p style="color:red">' . __('NOTE: It will create new User if there is no \'user_email\' before the import.', 'appthemes') . '</p>';
+		echo '<p><h3>' . __('Choose a .csv file to upload, then click \'upload\' file and import.', 'appthemes') . '</p></h3>';
 		wp_import_upload_form('?page=appthemes-classi-importer&amp;step=1');
 		echo '</div>';
 	}
